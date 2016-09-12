@@ -1,45 +1,27 @@
 .data
-	mensagem: .asciiz "O maior número é:"
-	insira: .asciiz "\nInsira um número:"
-	insira2: .asciiz "\nInsira um outro numero:"
-	insira3: .asciiz "\nInsira mais um:"
+
+	A: .word 89,1,10 # declaracao array
+
 .text
-	main:
-		#printf insira um numero
-		li $v0, 4
-		la $a0, insira
-		syscall
-		li $v0, 5
-		syscall
-		move $t0, $v0
+	Main:
+		li $a0, 3 # parameter n
+		sll $a0, $a0, 2 # number of bytes in array A
 		
-		#Insira outro numero
-		li $v0, 4
-		la $a0, insira2
-		syscall
-		la $v0, 5
-		syscall
-		move $t1, $v0
+	outer:
+		sub $t0, $a0, 8 # $t0: j-1
+		li $t1, 0 # no swap yet
 		
-		#insira mais outro numero
-		li $v0, 4
-		la $a0, insira3
-		syscall
-		la $v0, 5
-		syscall
-		move $t2, $v0
+	inner:
+		lw $t2, A+4($t0) # $t2 <- A[j]
+		lw $t3, A($t0) # $t3 <- A[j-1]
+		bgt $t2, $t3, no_swap # A[j] <= A[j-1]?
+		sw $t2, A($t0) # A[j-1] <- $t2 \ move bubble
+		sw $t3, A+4($t0) # A[j] <- $t3 / $t2 upwards
+		li $t1, 1 # swap occurred
 		
-		slt $s0, $t1, $t0
-		bne $s0, $zero, swap
-		
-		li $v0, 1
-		move $a0, $t3
-		syscall
-		
-		#return 0
-		li $v0, 10
-		syscall
-		
-	swap:
-		move $t3, $t0
-		jr $ra
+	no_swap:
+		sub $t0, $t0, 4 #proximo elemento do array (next array element)
+		bgez $t0, inner # more?
+		bnez $t1, outer # did we swap?
+		li $v0, 10 # exit
+		syscall 
