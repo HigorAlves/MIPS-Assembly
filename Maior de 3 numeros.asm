@@ -1,6 +1,6 @@
 .data
 
-	A: .word 89,1,10 # declaracao array
+	A: .word 89,666,10 # declaracao array
 
 .text
 	Main:

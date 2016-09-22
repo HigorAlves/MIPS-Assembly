@@ -1,8 +1,8 @@
 .data
-	A: .word 4,5,6,7,8,9,10,2,1,3 # declaracao array
+	A: .word 666,420,15,7,5 # declaracao array
 .text
 	Main:
-		li $a0, 10 # parameter n
+		li $a0, 5 # parameter n
 		sll $a0, $a0, 2 # number of bytes in array A
 	outer:
 		sub $t0, $a0, 8 # $t0: j-1
